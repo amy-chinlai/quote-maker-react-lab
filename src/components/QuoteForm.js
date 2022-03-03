@@ -8,17 +8,20 @@ import { addQuote } from '../actions/quotes';
 
 class QuoteForm extends Component {
 
-constructor(props) {
-  super(props)
-  this.state = {
+// constructor(props) {
+//   super(props)
+//   this.
+state = {
     content: '',
     author: ''
   }
-}
+// }
 
   handleOnChange = event => {
+    console.log("called")
+    const {value, name} = event.target
     this.setState({
-      [event.name.target]: event.target.value
+      [name]: value
     })
   }
 
@@ -27,6 +30,18 @@ constructor(props) {
     // Create quote object from state
     // Pass quote object to action creator
     // Update component state to return to default state
+    event.preventDefault()
+    const quote = {
+      author: this.state.author,
+      content: this.state.content,
+      id: uuid(),
+      votes: 0
+    }
+    this.props.addQuote(quote)
+    this.setState({
+      content: '',
+      author: ''
+    })
   }
 
   render() {
@@ -36,11 +51,12 @@ constructor(props) {
           <div className="col-md-8 col-md-offset-2">
             <div className="panel panel-default">
               <div className="panel-body">
-                <form className="form-horizontal">
+                <form className="form-horizontal" onSubmit={this.handleOnSubmit}>
                   <div className="form-group">
                     <label htmlFor="content" className="col-md-4 control-label">Quote</label>
                     <div className="col-md-5">
                       <textarea
+                      name="content"
                         className="form-control"
                         value={this.state.content}
                         onChange={this.handleOnChange}
@@ -53,6 +69,7 @@ constructor(props) {
                       <input
                         className="form-control"
                         type="text"
+                        name="author"
                         value={this.state.author}
                         onChange={this.handleOnChange}
                       />
@@ -74,4 +91,10 @@ constructor(props) {
 }
 
 //add arguments to connect as needed
-export default connect(null ,mapDispatchToProps)(QuoteForm);
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({
+    addQuote: addQuote
+  }, dispatch)
+}
+export default connect(null, mapDispatchToProps)(QuoteForm);
