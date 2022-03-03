@@ -1,17 +1,25 @@
+import { toughCookie } from 'jsdom';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import uuid from 'uuid';
+import { bindActionCreators } from "redux"
 
 import { addQuote } from '../actions/quotes';
 
 class QuoteForm extends Component {
 
-  state = {
-    //set up a controlled form with internal state
+constructor(props) {
+  super(props)
+  this.state = {
+    content: '',
+    author: ''
   }
+}
 
   handleOnChange = event => {
-    // Handle Updating Component State
+    this.setState({
+      [event.name.target]: event.target.value
+    })
   }
 
   handleOnSubmit = event => {
@@ -35,6 +43,7 @@ class QuoteForm extends Component {
                       <textarea
                         className="form-control"
                         value={this.state.content}
+                        onChange={this.handleOnChange}
                       />
                     </div>
                   </div>
@@ -45,6 +54,7 @@ class QuoteForm extends Component {
                         className="form-control"
                         type="text"
                         value={this.state.author}
+                        onChange={this.handleOnChange}
                       />
                     </div>
                   </div>
@@ -64,4 +74,4 @@ class QuoteForm extends Component {
 }
 
 //add arguments to connect as needed
-export default connect()(QuoteForm);
+export default connect(null ,mapDispatchToProps)(QuoteForm);
